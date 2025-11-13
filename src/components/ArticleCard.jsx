@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function ArticleCard({ article }) {
   const {
     title,
@@ -6,6 +8,7 @@ export default function ArticleCard({ article }) {
     votes,
     comment_count,
     created_at,
+    article_id,
     article_img_url,
   } = article;
 
@@ -17,19 +20,24 @@ export default function ArticleCard({ article }) {
 
   return (
     <article className="article-card">
-      <img
-        src={article_img_url}
-        alt={title}
-        style={{ width: "100%", height: "160px", objectFit: "cover" }}
-      />
-      <h3>{title}</h3>
-      <p>
-        by <strong>{author}</strong> | Topic: <em>{topic}</em>
-      </p>
-      <p>
-        👍 {votes} | 💬 {comment_count}
-      </p>
-      <p>{date}</p>
+      <Link
+        to={`/articles/${article_id}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <img
+          src={article_img_url}
+          alt={title}
+          style={{ width: "100%", height: "160px", objectFit: "cover" }}
+        />
+        <h3>{title}</h3>
+        <p>
+          by <strong>{author}</strong> | Topic: <em>{topic}</em>
+        </p>
+        <p>
+          👍 {votes} | 💬 {comment_count}
+        </p>
+        <p>{date}</p>
+      </Link>
     </article>
   );
 }
