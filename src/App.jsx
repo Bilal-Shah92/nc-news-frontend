@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ArticlesPage from "./pages/ArticlesPage";
 import SingleArticlePage from "./pages/SingleArticlePage";
 import TopicsPage from "./pages/TopicsPage"; 
+import NotFoundPage from "./pages/PageNotFound"; 
 import "./index.css";
 
 function App() {
@@ -14,6 +15,8 @@ function App() {
 
         <Route path="/topics" element={<TopicsPage />} />
         <Route path="/topics/:topic" element={<ArticlesPage />} />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -51,7 +51,17 @@ export default function ArticlesPage() {
   };
 
   if (isLoading) return <p>Loading articles…</p>;
-  if (err) return <p>Error: {err}</p>;
+  if (err) {
+  return (
+    <main>
+      <h2>Not Found</h2>
+      <p>
+        Sorry, we couldn’t find what you were looking for.
+      </p>
+      <a href="/topics">Go back to topics</a>
+    </main>
+  );
+}
 
   return (
     <main>

@@ -64,7 +64,15 @@ export default function SingleArticlePage() {
   };
 
   if (isLoading) return <p>Loading article…</p>;
-  if (err) return <p>Error: {err}</p>;
+  if (err) {
+  return (
+    <main>
+      <h2>Article Not Found</h2>
+      <p>Sorry, we couldn't find the article you're looking for.</p>
+      <a href="/">Go back home</a>
+    </main>
+  );
+}
 
   const {
     title,
