@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import CommentCard from "./CommentCard";
 
 export default function CommentsSection({ articleId }) {
   const [comments, setComments] = useState([]);
@@ -10,26 +9,34 @@ export default function CommentsSection({ articleId }) {
   const [isPosting, setIsPosting] = useState(false);
   const [postError, setPostError] = useState(null);
 
+  const [deletingId, setDeletingId] = useState(null);
+  const [deleteError, setDeleteError] = useState(null);
+
+  const loggedInUser = "grumpy19";
+
   useEffect(() => {
-  setIsLoading(true);
-  setError(null);
+    setIsLoading(true);
+    setError(null);
+    setDeleteError(null);
 
-  fetch(`https://be-nc-news-3exq.onrender.com/api/articles/${articleId}/comments`)
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to load comments");
-      return res.json();
-    })
-    .then(({ comments }) => {
-      setComments(comments);
-      setIsLoading(false);
-    })
-    .catch((err) => {
-      setError(err.message);
-      setIsLoading(false);
-    });
-}, [articleId]);
+    fetch(
+      `https://be-nc-news-3exq.onrender.com/api/articles/${articleId}/comments`
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load comments");
+        return res.json();
+      })
+      .then(({ comments }) => {
+        setComments(comments);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setIsLoading(false);
+      });
+  }, [articleId]);
 
- const handleSubmitComment = (event) => {
+  const handleSubmitComment = (event) => {
     event.preventDefault();
 
     if (!commentBody.trim()) {
@@ -46,7 +53,7 @@ export default function CommentsSection({ articleId }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: "grumpy19", 
+          username: loggedInUser,
           body: commentBody,
         }),
       }
@@ -57,12 +64,35 @@ export default function CommentsSection({ articleId }) {
       })
       .then(({ comment }) => {
         setComments((current) => [comment, ...current]);
-        setCommentBody(""); 
+        setCommentBody("");
         setIsPosting(false);
       })
       .catch(() => {
         setPostError("Sorry, your comment could not be posted.");
         setIsPosting(false);
+      });
+  };
+
+  const handleDeleteComment = (commentId) => {
+    setDeleteError(null);
+    setDeletingId(commentId);
+
+    fetch(
+      `https://be-nc-news-3exq.onrender.com/api/comments/${commentId}`,
+      {
+        method: "DELETE",
+      }
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to delete comment");
+        setComments((current) =>
+          current.filter((comment) => comment.comment_id !== commentId)
+        );
+        setDeletingId(null);
+      })
+      .catch(() => {
+        setDeleteError("Sorry, your comment could not be deleted.");
+        setDeletingId(null);
       });
   };
 
@@ -90,6 +120,10 @@ export default function CommentsSection({ articleId }) {
         </button>
       </form>
 
+      {deleteError && (
+        <p style={{ color: "red", marginTop: "0.5rem" }}>{deleteError}</p>
+      )}
+
       {isLoading && <p>Loading comments…</p>}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
@@ -101,6 +135,15 @@ export default function CommentsSection({ articleId }) {
                 <strong>{comment.author}</strong>
               </p>
               <p>{comment.body}</p>
+
+              {comment.author === loggedInUser && (
+                <button
+                  onClick={() => handleDeleteComment(comment.comment_id)}
+                  disabled={deletingId === comment.comment_id}
+                >
+                  {deletingId === comment.comment_id ? "Deleting..." : "Delete"}
+                </button>
+              )}
             </li>
           ))}
         </ul>
