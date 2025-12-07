@@ -15,7 +15,7 @@ Backend API: **https://be-nc-news-3exq.onrender.com/api**
 
 ## Features
 
-- View all articles  
+- View all the articles  
 - Filter articles by topic  
 - Sort by date, votes, or comment count  
 - Toggle ascending/descending order  
