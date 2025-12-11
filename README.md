@@ -10,6 +10,7 @@ This app was built with React + Vite as part of the Northcoders Software Enginee
 
 Frontend: **https://peaceful-boba-8ba5d2.netlify.app/**  
 Backend API: **https://be-nc-news-3exq.onrender.com/api**
+Backend Github: **https://github.com/Bilal-Shah92/be-nc-news**
 
 ---
 
